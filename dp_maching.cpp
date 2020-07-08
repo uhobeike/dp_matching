@@ -16,6 +16,8 @@ using std::string;
 using std::ifstream;
 using std::istringstream;
 using std::stod;
+using std::stoi;
+using std::pow;
 
 class dp_matching
 {
@@ -23,7 +25,7 @@ class dp_matching
         dp_matching() :
             file_total_number_(100),
             frame_number_(15),
-            vec_one_dimensional_{1,1}
+            vec_one_dimensional_{1,1,1}
         {
             file_number_.emplace_back();
             file_data_capture_.emplace_back();
@@ -67,7 +69,7 @@ class dp_matching
                 template_data_.resize(++vec_one_dimensional_.at(0) );
             }
             template_data_.resize(--vec_one_dimensional_.at(0) );
-#if 0
+#if 1
             while (getline(f_un, line)) 
             {
                 istringstream stream(line);
@@ -78,14 +80,66 @@ class dp_matching
 
                 unknown_data_.resize(++vec_one_dimensional_.at(1) );
             }
+            unknown_data_.resize(--vec_one_dimensional_.at(1) );
 #endif
+        }
+
+        void local_distance_calculation()
+        {
+#if 1
+            int double_flag = 0;
+            
+            for (auto it_temp = template_data_.begin(); it_temp != template_data_.end(); ++it_temp) 
+            {   int cnt = 0;
+                for (auto it_unk = unknown_data_.begin(); it_unk != unknown_data_.end(); ++it_unk) 
+                {   
+                    int tuning_number_outside = 0;
+                    int accumulation = 0;
+                    for (auto it = (*it_temp).begin(); it != (*it_temp).end(); ++it) 
+                    {
+                        int tuning_number_inside = 0;
+                        for (auto it_t = (*it_unk).begin(); it_t != (*it_unk).end(); ++it_t) 
+                        {
+                            if(tuning_number_outside == tuning_number_inside)
+                            {
+                                int it_d = 0,it_t_d = 0;
+                                try 
+                                {
+                                    it_d   = stoi(*it);
+                                    it_t_d = stoi(*it_t);
+                                    accumulation += pow(it_d - it_t_d,2);
+                                    if(it_d < 10 && it_t_d < 10) double_flag = 1;
+                                    else double_flag = 0;
+                                    ++tuning_number_inside;
+                                } 
+                                catch (const std::invalid_argument& e) 
+                                {
+                                    double_flag = 0;
+                                }
+                            }
+                            break;
+                        }
+                        ++tuning_number_outside;
+                    } 
+                    if(double_flag)
+                    {
+                        local_distance_[vec_one_dimensional_.at(2) - 1].push_back(accumulation);
+                        ++cnt;
+                        cout << cnt << endl;
+                    }
+                }
+                if(double_flag) local_distance_.resize(++vec_one_dimensional_.at(2));
+            }
+            local_distance_.resize(--vec_one_dimensional_.at(2));
+#endif       
         }
 
         void run()
         {
             file_read();
-#if 1
-            for (auto it_t = template_data_.begin(); it_t != template_data_.end(); ++it_t) 
+            local_distance_calculation();
+#if 0
+            for (auto it_t = local_distance_.begin(); it_t != local_distance_.end(); ++it_t) 
             {
                 for (auto it = (*it_t).begin(); it != (*it_t).end(); ++it) 
                 {
@@ -93,6 +147,19 @@ class dp_matching
                 } 
 
                 cout << endl;
+            }
+#endif     
+#if 0
+            int ct = 0;
+            for (auto it_t = local_distance_.begin(); it_t != local_distance_.end(); ++it_t) 
+            {
+                
+                for (auto it = (*it_t).begin(); it != (*it_t).end(); ++it) 
+                {
+
+                } 
+                ++ct;
+                cout << ct << endl;
             }
 #endif     
         }
@@ -105,7 +172,7 @@ class dp_matching
         vector<double> file_data_capture_;
         vector<vector<string>> template_data_;
         vector<vector<string>> unknown_data_;
-        vector<vector<double>> local_distance_;
+        vector<vector<int>> local_distance_;
         vector<vector<double>> cumulative_distance_;
         vector<double> word_distance_;
         vector<double> minimum_word_distance_;
