@@ -52,7 +52,9 @@ class dp_matching
         {
             cout << "please select file top number" << endl;
             cout << "menue: 11 12 21 22" << endl;
-            cin >> temp_file_top_num_ >> unk_file_top_num_;
+            //cin >> temp_file_top_num_ >> unk_file_top_num_;
+            temp_file_top_num_ = 11;
+            unk_file_top_num_ = 11;
             cout << "template_file: " << temp_file_top_num_ << endl;
             cout << "unknown_file:  " << unk_file_top_num_ << endl;
             cout << endl << "start DP_matching processing" << endl;
@@ -100,7 +102,6 @@ class dp_matching
             int double_flag = 0;
             for (auto it_temp = template_data_.begin(); it_temp != template_data_.end(); ++it_temp) 
             {   
-                int cnt = 0;
                 for (auto it_unk = unknown_data_.begin(); it_unk != unknown_data_.end(); ++it_unk) 
                 {   
                     int tuning_number_outside = 0;
