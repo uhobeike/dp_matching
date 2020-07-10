@@ -52,7 +52,9 @@ class dp_matching
         {
             cout << "please select file top number" << endl;
             cout << "menue: 11 12 21 22" << endl;
-            cin >> temp_file_top_num_ >> unk_file_top_num_;
+            //cin >> temp_file_top_num_ >> unk_file_top_num_;
+            temp_file_top_num_ = 11;
+            unk_file_top_num_ = 11;
             cout << "template_file: " << temp_file_top_num_ << endl;
             cout << "unknown_file:  " << unk_file_top_num_ << endl;
             cout << endl << "start DP_matching processing" << endl;
@@ -62,7 +64,6 @@ class dp_matching
         {
             char *c = getenv("HOME");
             string HOME = c; 
-            int f_te_num = 0,f_un_num = 0,a = 0;
             const std::string f_te_path = (boost::format("/Documents/campas_work/dp_matching/city_mcepdata/city%03d/city%03d_%03d.txt") %temp_file_top_num_ % temp_file_top_num_ % file_number_tmp).str();
             const std::string f_un_path = (boost::format("/Documents/campas_work/dp_matching/city_mcepdata/city%03d/city%03d_%03d.txt") % unk_file_top_num_ % unk_file_top_num_ % file_number_unk).str();
             ifstream f_te(HOME + f_te_path,std::ios::in);
