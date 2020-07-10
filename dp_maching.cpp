@@ -166,25 +166,25 @@ class dp_matching
                 for (int j = 1; j < stoi(unknown_data_[2][0]); ++j) 
                 {
                     double vertical = cumulative_distance_[i][j - 1] + local_distance_[i][j];
-					double diagonal = cumulative_distance_[i - 1][j - 1] + (1.4142 * local_distance_[i][j]);
-					double side = cumulative_distance_[i - 1][j] + local_distance_[i][j];
+                    double diagonal = cumulative_distance_[i - 1][j - 1] + (1.4142 * local_distance_[i][j]);
+                    double side = cumulative_distance_[i - 1][j] + local_distance_[i][j];
 
                     double min_num = min ({vertical, diagonal , side});
 
-					if (vertical == min_num)
+                    if (vertical == min_num)
                     {
-						cumulative_distance_.at(i).at(j) = vertical;
-					}
+                        cumulative_distance_.at(i).at(j) = vertical;
+                    }
 
-					if (diagonal == min_num)
+                    if (diagonal == min_num)
                     {
-						cumulative_distance_.at(i).at(j) = diagonal;
-					}
+                        cumulative_distance_.at(i).at(j) = diagonal;
+                    }
 
                     if (side == min_num)
                     {
-						cumulative_distance_.at(i).at(j) = side;
-					}
+                        cumulative_distance_.at(i).at(j) = side;
+                    }
                 }
             }
 
