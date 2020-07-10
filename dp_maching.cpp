@@ -166,7 +166,7 @@ class dp_matching
                 for (int j = 1; j < stoi(unknown_data_[2][0]); ++j) 
                 {
                     double vertical = cumulative_distance_[i][j - 1] + local_distance_[i][j];
-					double diagonal = cumulative_distance_[i - 1][j - 1] + (2 * local_distance_[i][j]);
+					double diagonal = cumulative_distance_[i - 1][j - 1] + (1.4142 * local_distance_[i][j]);
 					double side = cumulative_distance_[i - 1][j] + local_distance_[i][j];
 
                     double min_num = min ({vertical, diagonal , side});
