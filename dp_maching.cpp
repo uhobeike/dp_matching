@@ -26,8 +26,13 @@ class dp_matching
     public:
         dp_matching() :
             file_total_number_(100),
+            temp_file_num_store_(0),
             frame_number_(15),
             init_flag_(1),
+            min_file_search(1),
+            min_search_num(0),
+            min_file_result_(0),
+            correct_answer_rate_(0),
             min_search_num_store_(0),
             vec_one_dimensional_{1,1,1,1,1}
         {
@@ -41,7 +46,7 @@ class dp_matching
             minimum_word_distance_.emplace_back();
         }
 
-        void file_read(int file_number_tmp, int file_number_unk)
+        void file_read(int& file_number_tmp, int& file_number_unk)
         {
             char *c = getenv("HOME");
             string HOME = c; 
@@ -138,12 +143,12 @@ class dp_matching
             }
             cumulative_distance_.resize(--vec_one_dimensional_.at(3));
 
-            for(int i(1);i < stoi(template_data_[2][0]);i++)
+            for(int i = 1;i < stoi(template_data_[2][0]);i++)
             {
                 cumulative_distance_.at(i).at(0) = cumulative_distance_.at(i - 1).at(0) + local_distance_.at(i).at(0); 
             }
 
-            for(int i(1);i < stoi(unknown_data_[2][0]);i++)
+            for(int i = 1;i < stoi(unknown_data_[2][0]);i++)
             {
                 cumulative_distance_.at(0).at(i) = cumulative_distance_.at(0).at(i - 1) + local_distance_.at(0).at(i);
             }
@@ -187,29 +192,37 @@ class dp_matching
 
         void min_search()
         {
-            int min_file_search = 1,min_file_result = 0;
-            double min_search_num = 0;
             for (auto it_t =  word_distance_.begin(); it_t !=  word_distance_.end(); ++it_t) 
             {
                 min_search_num =  *it_t;
                 if (init_flag_) min_search_num_store_ = min_search_num;
                 double min_num = min ({min_search_num_store_,min_search_num});
                 min_search_num_store_ = min_num;
-                if (min_search_num_store_ == min_search_num) min_file_result = min_file_search;
+                if (min_search_num_store_ == min_search_num) min_file_result_ = min_file_search;
                 ++min_file_search;
                 init_flag_ = 0;
             }
-            cout << min_file_result << endl;
+            //cout << min_file_result_ << endl;
         }
-
-        void vector_memory_clear()
+#if 0
+        void correct_answer_rate(int& temp_file_num)
         {
+            
+            if(temp_file_num == min_file_result_) ++correct_answer_rate_;
+            if(temp_file_num == file_total_number_) correct_answer_rate_ = correct_answer_rate_ / file_total_number_;
+        }
+#endif
+        void vector_memory_clear(int& temp_file_num)
+        {
+            temp_file_num_store_;
             file_number_.clear();
             file_data_capture_.clear();
             template_data_.clear();
             unknown_data_.clear();
             local_distance_.clear();
             cumulative_distance_.clear();
+            if(temp_file_num)word_distance_.clear();
+
 
             file_number_.emplace_back();
             file_data_capture_.emplace_back();
@@ -220,28 +233,36 @@ class dp_matching
             vec_one_dimensional_ = {1,1,1,1,1};
 
             min_search_num_store_ = 0;
+            
+            min_file_search = 1;
             init_flag_ = 1;
+            min_search_num = 0;
+            min_file_result_ = 0;
         }
 
         void run()
         {
             //int cnta = 0;
-            
-            //for(int i(1); i<= file_total_number_;i++)
-            //{
+            int i_i = 14;
+            for(int i = 14;i<= file_total_number_;i++)
+            {
             //    int cntb = 0;
-                for(int j(1);j <= file_total_number_;j++)
+                for(int j = 1;j <= file_total_number_;j++)
                 {
-                    file_read(18,j);
+                    vector_memory_clear(i);
+                    file_read(i,j);
                     local_distance_calculation();
                     boundary_condition_calculation();
-                    vector_memory_clear();
                     min_search();
                     //++cntb;
                 }
+            
+                
+                cout << " "<< i << " "<< min_file_result_ << endl;
+                //correct_answer_rate(i);
             //    ++cnta;
-            //    cout << cntb<< " " << cnta << endl;
-            //}
+                //cout << cntb << " " << cnta << " " << correct_answer_rate_ << endl;
+            }
 #if 0
             for (auto it_t = word_distance_.begin(); it_t != word_distance_.end(); ++it_t) 
             {
@@ -267,7 +288,7 @@ class dp_matching
                 cout << ct << endl;
             }
 #endif     
-#if 1
+#if 0
             for (auto it_t =  word_distance_.begin(); it_t !=  word_distance_.end(); ++it_t) 
             {
                 cout << *it_t;
@@ -277,9 +298,14 @@ class dp_matching
         }
 
     private:
-        int file_total_number_;
+        double file_total_number_;
+        int temp_file_num_store_;
         int frame_number_;
         int init_flag_;
+        int min_file_search;
+        double min_search_num;
+        int min_file_result_;
+        double correct_answer_rate_;
         double min_search_num_store_;
         vector<int> vec_one_dimensional_;
         vector<int> file_number_;
