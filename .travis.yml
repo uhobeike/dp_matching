@@ -8,6 +8,7 @@ addons:
       - kubuntu-backports
       - boost-latest
     packages:
+      - g++-7.5
       - cmake
       - libboost-thread-dev
       - libboost-graph-dev
