@@ -7,6 +7,7 @@ addons:
       # For cmake >= 2.8.8 (for CMakePackageConfigHelpers)
       - kubuntu-backports
       - boost-latest
+      - travis-ci/sqlite3
     packages:
       - gcc-7
       - g++-7
@@ -16,6 +17,7 @@ addons:
       - libcgal-dev
       - postgresql-server-dev-all
       - postgresql-common
+      - sqlite3
 script:
     - make CXX=${CXX}
     - ./main
