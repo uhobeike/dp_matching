@@ -52,9 +52,7 @@ class dp_matching
         {
             cout << "please select file top number" << endl;
             cout << "menue: 11 12 21 22" << endl;
-            //cin >> temp_file_top_num_ >> unk_file_top_num_;
-            temp_file_top_num_ = 11;
-            unk_file_top_num_ = 11;
+            cin >> temp_file_top_num_ >> unk_file_top_num_;
             cout << "template_file: " << temp_file_top_num_ << endl;
             cout << "unknown_file:  " << unk_file_top_num_ << endl;
             cout << endl << "start DP_matching processing" << endl;
