@@ -37,7 +37,7 @@ class dp_matching
             unknown_data_.emplace_back();
             local_distance_.emplace_back();
             cumulative_distance_.emplace_back();
-            word_distance_.emplace_back();
+            //word_distance_.emplace_back();
             minimum_word_distance_.emplace_back();
         }
 
@@ -46,7 +46,6 @@ class dp_matching
             char *c = getenv("HOME");
             string HOME = c; 
             int f_te_num = 0,f_un_num = 0,a = 0;
-            //cin >> f_te_num >> f_un_num;
             const std::string f_te_path = (boost::format("/Documents/campas_work/dp_matching/city_mcepdata/city%03d/city%03d_%03d.txt") % 11 % 11 % file_number_tmp).str();
             const std::string f_un_path = (boost::format("/Documents/campas_work/dp_matching/city_mcepdata/city%03d/city%03d_%03d.txt") % 12 % 12 % file_number_unk).str();
             ifstream f_te(HOME + f_te_path,std::ios::in);
@@ -57,19 +56,12 @@ class dp_matching
             while (getline(f_te, line)) 
             {
                 istringstream stream(line);
-#if 0 
-                cout << line << endl;
-#endif
+
                 while (getline(stream, field, ' ') )
                 {
-#if 0 
-                    cout << field;
-#endif
                     template_data_[vec_one_dimensional_.at(0) - 1].push_back(field );
                 }
-#if 0                
-                cout << endl;
-#endif
+
                 template_data_.resize(++vec_one_dimensional_.at(0) );
             }
             template_data_.resize(--vec_one_dimensional_.at(0) );
@@ -161,34 +153,31 @@ class dp_matching
             {
                 for (int j = 1; j < stoi(unknown_data_[2][0]); ++j) 
                 {
-#if 1
                     double vertical = cumulative_distance_[i][j - 1] + local_distance_[i][j];
 					double diagonal = cumulative_distance_[i - 1][j - 1] + (2 * local_distance_[i][j]);
 					double side = cumulative_distance_[i - 1][j] + local_distance_[i][j];
 
                     //cout << vertical << " " << diagonal << " " << side << " ";
                     //cout << vertical << " " << cumulative_distance_[i][j - 1] << " " << local_distance_[i][j] << endl;
-#if 1
+
                     double min_num = min ({vertical, diagonal , side});
-#if 1
+
 					if (vertical == min_num)
                     {
 						cumulative_distance_.at(i).at(j) = vertical;
 					}
-#if 1
+
 					if (diagonal == min_num)
                     {
 						cumulative_distance_.at(i).at(j) = diagonal;
 					}
+
                     if (side == min_num)
                     {
 						cumulative_distance_.at(i).at(j) = side;
 					}
-#endif
-#endif
                     //cout << cumulative_distance_.at(108).at(108) << endl;
-#endif
-#endif                  
+            
                 }
             }
 
@@ -198,7 +187,7 @@ class dp_matching
 
         void min_search()
         {
-            int min_file = 0;
+            int min_file_search = 1,min_file_result = 0;
             double min_search_num = 0;
             for (auto it_t =  word_distance_.begin(); it_t !=  word_distance_.end(); ++it_t) 
             {
@@ -206,10 +195,11 @@ class dp_matching
                 if (init_flag_) min_search_num_store_ = min_search_num;
                 double min_num = min ({min_search_num_store_,min_search_num});
                 min_search_num_store_ = min_num;
-                if (min_search_num_store_ == min_search_num) ++min_file;
+                if (min_search_num_store_ == min_search_num) min_file_result = min_file_search;
+                ++min_file_search;
                 init_flag_ = 0;
             }
-            cout << min_file << endl;
+            cout << min_file_result << endl;
         }
 
         void vector_memory_clear()
@@ -242,7 +232,7 @@ class dp_matching
             //    int cntb = 0;
                 for(int j(1);j <= file_total_number_;j++)
                 {
-                    file_read(14,j);
+                    file_read(18,j);
                     local_distance_calculation();
                     boundary_condition_calculation();
                     vector_memory_clear();
