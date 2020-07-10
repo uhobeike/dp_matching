@@ -1,5 +1,5 @@
 # dp_matching
-
+[![Build Status](https://travis-ci.org/uhobeike/dp_matching.svg?branch=master)](https://travis-ci.org/uhobeike/dp_matching)
 ## How to use
 ```
 ~$ g++ dp_maching.cpp
