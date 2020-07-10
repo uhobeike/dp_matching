@@ -16,4 +16,5 @@ addons:
       - postgresql-server-dev-all
       - postgresql-common
 script:
-  - g++ -Wall -Wextra -pedantic dp_maching.cpp && ./a.out
+    - make CXX=${CXX}
+    - ./main
