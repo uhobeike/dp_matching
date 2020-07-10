@@ -44,9 +44,9 @@ class dp_matching
             char *c = getenv("HOME");
             string HOME = c; 
             int f_te_num = 0,f_un_num = 0,a = 0;
-            cin >> f_te_num >> f_un_num;
-            const std::string f_te_path = (boost::format("/Documents/campas_work/dp_matching/city_mcepdata/city%03d/city%03d_%03d.txt") % f_te_num % f_te_num % f_te_num).str();
-            const std::string f_un_path = (boost::format("/Documents/campas_work/dp_matching/city_mcepdata/city%03d/city%03d_%03d.txt") % f_un_num % f_un_num % f_te_num).str();
+            //cin >> f_te_num >> f_un_num;
+            const std::string f_te_path = (boost::format("/Documents/campas_work/dp_matching/city_mcepdata/city%03d/city%03d_%03d.txt") % 11 % 11 % 01).str();
+            const std::string f_un_path = (boost::format("/Documents/campas_work/dp_matching/city_mcepdata/city%03d/city%03d_%03d.txt") % 21 % 21 % 06).str();
             ifstream f_te(HOME + f_te_path,std::ios::in);
             ifstream f_un(HOME + f_un_path,std::ios::in);
 
@@ -143,26 +143,37 @@ class dp_matching
                 cumulative_distance_.resize(++vec_one_dimensional_.at(3));
             }
             cumulative_distance_.resize(--vec_one_dimensional_.at(3));
+
+            for(int i(1);i < stoi(template_data_[2][0]);i++)
+            {
+                cumulative_distance_.at(i).at(0) = cumulative_distance_.at(i - 1).at(0) + local_distance_.at(i).at(0); 
+            }
+
+            for(int i(1);i < stoi(unknown_data_[2][0]);i++)
+            {
+                cumulative_distance_.at(0).at(i) = cumulative_distance_.at(0).at(i - 1) + local_distance_.at(0).at(i);
+            }
             
 #if 1
             for (int i = 1; i < stoi(template_data_[2][0]); ++i) 
             {
                 for (int j = 1; j < stoi(unknown_data_[2][0]); ++j) 
                 {
-
+#if 1
                     double vertical = cumulative_distance_[i][j - 1] + local_distance_[i][j];
 					double diagonal = cumulative_distance_[i - 1][j - 1] + (2 * local_distance_[i][j]);
 					double side = cumulative_distance_[i - 1][j] + local_distance_[i][j];
 
                     cout << vertical << " " << diagonal << " " << side << " ";
                     //cout << vertical << " " << cumulative_distance_[i][j - 1] << " " << local_distance_[i][j] << endl;
-
 #if 1
                     double min_num = min ({vertical, diagonal , side});
+#if 1
 					if (vertical == min_num)
                     {
 						cumulative_distance_.at(i).at(j) = vertical;
 					}
+#if 1
 					if (diagonal == min_num)
                     {
 						cumulative_distance_.at(i).at(j) = diagonal;
@@ -171,7 +182,10 @@ class dp_matching
                     {
 						cumulative_distance_.at(i).at(j) = side;
 					}
-                    cout << cumulative_distance_.at(i).at(j) << endl;
+#endif
+#endif
+                    //cout << cumulative_distance_.at(108).at(108) << endl;
+#endif
 #endif                  
                 }
             }
@@ -185,7 +199,7 @@ class dp_matching
             file_read();
             local_distance_calculation();
             boundary_condition_calculation();
-#if 0
+#if 1
             for (auto it_t = cumulative_distance_.begin(); it_t != cumulative_distance_.end(); ++it_t) 
             {
                 for (auto it = (*it_t).begin(); it != (*it_t).end(); ++it) 
