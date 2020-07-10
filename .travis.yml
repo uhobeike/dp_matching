@@ -12,4 +12,4 @@ addons:
       - libcgal-dev
 script:
     - make CXX=${CXX}
-    - ./main
+    - ./dp_maching
