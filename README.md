@@ -21,4 +21,4 @@ start DP_matching processing
 正解率は100%です。
 ```
 ## Total execution time
-#  1 minute 
+#  About 1 minute 

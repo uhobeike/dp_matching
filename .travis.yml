@@ -1,0 +1,3 @@
+language: cpp
+script:
+  - g++ -Wall -Wextra -pedantic dp_maching.cpp && ./a.out
