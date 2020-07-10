@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <boost/format.hpp>
+#include <algorithm>
 
 using std::cin;
 using std::cout;
@@ -18,6 +19,7 @@ using std::istringstream;
 using std::stod;
 using std::stoi;
 using std::pow;
+using std::min;
 
 class dp_matching
 {
@@ -25,7 +27,7 @@ class dp_matching
         dp_matching() :
             file_total_number_(100),
             frame_number_(15),
-            vec_one_dimensional_{1,1,1}
+            vec_one_dimensional_{1,1,1,1,1}
         {
             file_number_.emplace_back();
             file_data_capture_.emplace_back();
@@ -90,11 +92,12 @@ class dp_matching
             int double_flag = 0;
             
             for (auto it_temp = template_data_.begin(); it_temp != template_data_.end(); ++it_temp) 
-            {   int cnt = 0;
+            {   
+                int cnt = 0;
                 for (auto it_unk = unknown_data_.begin(); it_unk != unknown_data_.end(); ++it_unk) 
                 {   
                     int tuning_number_outside = 0;
-                    int accumulation = 0;
+                    double accumulation = 0;
                     for (auto it = (*it_temp).begin(); it != (*it_temp).end(); ++it) 
                     {
                         int tuning_number_inside = 0;
@@ -102,11 +105,11 @@ class dp_matching
                         {
                             if(tuning_number_outside == tuning_number_inside)
                             {
-                                int it_d = 0,it_t_d = 0;
+                                double it_d = 0,it_t_d = 0;
                                 try 
                                 {
-                                    it_d   = stoi(*it);
-                                    it_t_d = stoi(*it_t);
+                                    it_d   = stod(*it);
+                                    it_t_d = stod(*it_t);
                                     accumulation += pow(it_d - it_t_d,2);
                                     if(it_d < 10 && it_t_d < 10) double_flag = 1;
                                     else double_flag = 0;
@@ -121,12 +124,7 @@ class dp_matching
                         }
                         ++tuning_number_outside;
                     } 
-                    if(double_flag)
-                    {
-                        local_distance_[vec_one_dimensional_.at(2) - 1].push_back(accumulation);
-                        ++cnt;
-                        cout << cnt << endl;
-                    }
+                    if(double_flag) local_distance_[vec_one_dimensional_.at(2) - 1].push_back(accumulation);
                 }
                 if(double_flag) local_distance_.resize(++vec_one_dimensional_.at(2));
             }
@@ -134,16 +132,66 @@ class dp_matching
 #endif       
         }
 
-        void run()
+        void boundary_condition_calculation()
         {
-            file_read();
-            local_distance_calculation();
-#if 0
             for (auto it_t = local_distance_.begin(); it_t != local_distance_.end(); ++it_t) 
             {
                 for (auto it = (*it_t).begin(); it != (*it_t).end(); ++it) 
                 {
+                    cumulative_distance_[vec_one_dimensional_.at(3) - 1].push_back(*it);
+                } 
+                cumulative_distance_.resize(++vec_one_dimensional_.at(3));
+            }
+            cumulative_distance_.resize(--vec_one_dimensional_.at(3));
+            
+#if 1
+            for (int i = 1; i < stoi(template_data_[2][0]); ++i) 
+            {
+                for (int j = 1; j < stoi(unknown_data_[2][0]); ++j) 
+                {
+
+                    double vertical = cumulative_distance_[i][j - 1] + local_distance_[i][j];
+					double diagonal = cumulative_distance_[i - 1][j - 1] + (2 * local_distance_[i][j]);
+					double side = cumulative_distance_[i - 1][j] + local_distance_[i][j];
+
+                    cout << vertical << " " << diagonal << " " << side << " ";
+                    //cout << vertical << " " << cumulative_distance_[i][j - 1] << " " << local_distance_[i][j] << endl;
+
+#if 1
+                    double min_num = min ({vertical, diagonal , side});
+					if (vertical == min_num)
+                    {
+						cumulative_distance_.at(i).at(j) = vertical;
+					}
+					if (diagonal == min_num)
+                    {
+						cumulative_distance_.at(i).at(j) = diagonal;
+					}
+                    if (side == min_num)
+                    {
+						cumulative_distance_.at(i).at(j) = side;
+					}
+                    cout << cumulative_distance_.at(i).at(j) << endl;
+#endif                  
+                }
+            }
+
+            word_distance_.push_back(cumulative_distance_[stoi(template_data_[2][0]) - 1][stoi(unknown_data_[2][0]) - 1] / (stoi(template_data_[2][0]) + stoi(unknown_data_[2][0]) ) );
+#endif        
+        }
+
+        void run()
+        {
+            file_read();
+            local_distance_calculation();
+            boundary_condition_calculation();
+#if 0
+            for (auto it_t = cumulative_distance_.begin(); it_t != cumulative_distance_.end(); ++it_t) 
+            {
+                for (auto it = (*it_t).begin(); it != (*it_t).end(); ++it) 
+                {
                     cout << *it;
+                    cout << " ";
                 } 
 
                 cout << endl;
@@ -162,6 +210,13 @@ class dp_matching
                 cout << ct << endl;
             }
 #endif     
+#if 0
+            for (auto it_t =  word_distance_.begin(); it_t !=  word_distance_.end(); ++it_t) 
+            {
+                cout << *it_t;
+                cout << endl;
+            }
+#endif     
         }
 
     private:
@@ -172,7 +227,7 @@ class dp_matching
         vector<double> file_data_capture_;
         vector<vector<string>> template_data_;
         vector<vector<string>> unknown_data_;
-        vector<vector<int>> local_distance_;
+        vector<vector<double>> local_distance_;
         vector<vector<double>> cumulative_distance_;
         vector<double> word_distance_;
         vector<double> minimum_word_distance_;
