@@ -26,7 +26,7 @@ class dp_matching
     public:
         dp_matching() :
             file_total_number_(100),
-            temp_file_num_store_(0),
+            temp_file_num_store_(1),
             frame_number_(15),
             init_flag_(1),
             min_file_search(1),
@@ -214,15 +214,13 @@ class dp_matching
 #endif
         void vector_memory_clear(int& temp_file_num)
         {
-            temp_file_num_store_;
             file_number_.clear();
             file_data_capture_.clear();
             template_data_.clear();
             unknown_data_.clear();
             local_distance_.clear();
             cumulative_distance_.clear();
-            if(temp_file_num)word_distance_.clear();
-
+            if(temp_file_num != temp_file_num_store_) word_distance_.clear();
 
             file_number_.emplace_back();
             file_data_capture_.emplace_back();
@@ -233,11 +231,12 @@ class dp_matching
             vec_one_dimensional_ = {1,1,1,1,1};
 
             min_search_num_store_ = 0;
-            
             min_file_search = 1;
             init_flag_ = 1;
             min_search_num = 0;
             min_file_result_ = 0;
+
+            temp_file_num_store_ = temp_file_num;
         }
 
         void run()
