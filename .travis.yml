@@ -3,19 +3,8 @@ language: cpp
 addons:
   apt:
     sources:
-      # For gcc >= 4.8
-      - ubuntu-toolchain-r-test
-      # For cmake >= 2.8.8 (for CMakePackageConfigHelpers)
-      - kubuntu-backports
     packages:
-      - gcc-7
-      - g++-7
       - cmake
-      - libboost-thread-dev
-      - libboost-graph-dev
-      - libcgal-dev
-      - postgresql-server-dev-all
-      - postgresql-common
 script:
     - make CXX=${CXX}
     - ./main
