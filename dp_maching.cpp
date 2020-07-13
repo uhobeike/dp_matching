@@ -4,8 +4,6 @@
 #include <cmath>
 #include <fstream> 
 #include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
 #include <boost/format.hpp>
 #include <algorithm>
 
@@ -62,12 +60,11 @@ class dp_matching
 
         void file_read(int& file_number_tmp, int& file_number_unk)
         {
-            char *c = getenv("HOME");
-            string HOME = c; 
-            const std::string f_te_path = (boost::format("/Documents/campas_work/dp_matching/city_mcepdata/city%03d/city%03d_%03d.txt") %temp_file_top_num_ % temp_file_top_num_ % file_number_tmp).str();
-            const std::string f_un_path = (boost::format("/Documents/campas_work/dp_matching/city_mcepdata/city%03d/city%03d_%03d.txt") % unk_file_top_num_ % unk_file_top_num_ % file_number_unk).str();
-            ifstream f_te(HOME + f_te_path,std::ios::in);
-            ifstream f_un(HOME + f_un_path,std::ios::in);
+
+            const std::string f_te_path = (boost::format("./city_mcepdata/city%03d/city%03d_%03d.txt") %temp_file_top_num_ % temp_file_top_num_ % file_number_tmp).str();
+            const std::string f_un_path = (boost::format("./city_mcepdata/city%03d/city%03d_%03d.txt") % unk_file_top_num_ % unk_file_top_num_ % file_number_unk).str();
+            ifstream f_te(f_te_path,std::ios::in);
+            ifstream f_un(f_un_path,std::ios::in);
 
             string line,field;
 
