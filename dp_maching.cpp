@@ -60,7 +60,6 @@ class dp_matching
 
         void file_read(int& file_number_tmp, int& file_number_unk)
         {
-
             const std::string f_te_path = (boost::format("./city_mcepdata/city%03d/city%03d_%03d.txt") %temp_file_top_num_ % temp_file_top_num_ % file_number_tmp).str();
             const std::string f_un_path = (boost::format("./city_mcepdata/city%03d/city%03d_%03d.txt") % unk_file_top_num_ % unk_file_top_num_ % file_number_unk).str();
             ifstream f_te(f_te_path,std::ios::in);
